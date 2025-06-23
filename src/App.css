@@ -1,13 +1,11 @@
-.product-img-container {
+.product-img {
   height: 200px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
 }
 
-.product-img {
-  max-height: 100%;
-  width: auto;
-  object-fit: contain;
+.product-price {
+  font-weight: bold;
+  margin-top: 1rem;
 }
