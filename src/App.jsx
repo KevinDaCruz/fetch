@@ -17,16 +17,20 @@ function App() {
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Réponse réseau incorrecte");
+        }
+        return res.json();
+      })
       .then((data) => {
         setProducts(data);
-        setLoading(false);
       })
       .catch((err) => {
         console.error("Erreur lors du chargement des produits :", err);
         setError(true);
-        setLoading(false);
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const handleAddProduct = () => {
@@ -43,7 +47,12 @@ function App() {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Erreur HTTP lors du POST");
+        }
+        return res.json();
+      })
       .then((json) => {
         alert(`Le produit avec l'id ${json.id} a été créé`);
       })
@@ -67,7 +76,12 @@ function App() {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Erreur HTTP lors du PUT");
+        }
+        return res.json();
+      })
       .then((json) => {
         alert(`Le produit avec l'id ${json.id} a été modifié`);
       })
@@ -87,7 +101,12 @@ function App() {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Erreur HTTP lors du PATCH");
+        }
+        return res.json();
+      })
       .then((json) => {
         alert(`Le prix du produit avec l'id ${json.id} a été modifié`);
       })
@@ -101,7 +120,12 @@ function App() {
     fetch(`https://fakestoreapi.com/products/${id}`, {
       method: "DELETE",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Erreur HTTP lors du DELETE");
+        }
+        return res.json();
+      })
       .then((json) => {
         alert(`Le produit avec l'id ${json.id} a été supprimé`);
       })
