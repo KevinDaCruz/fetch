@@ -16,125 +16,129 @@ function App() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch("https://fakestoreapi.com/products")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Réponse réseau incorrecte");
-        }
-        return res.json();
-      })
-      .then((data) => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("https://fakestoreapi.com/products");
+        if (!response.ok) throw new Error("Erreur HTTP");
+        const data = await response.json();
         setProducts(data);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Erreur lors du chargement des produits :", err);
         setError(true);
-      })
-      .finally(() => setLoading(false));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
-  const handleAddProduct = () => {
-    fetch("https://fakestoreapi.com/products", {
-      method: "POST",
-      body: JSON.stringify({
-        title: "Nouveau produit",
-        price: 10.99,
-        description: "Description du nouveau produit",
-        image: "https://via.placeholder.com/150",
-        category: "autre",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erreur HTTP lors du POST");
-        }
-        return res.json();
-      })
-      .then((json) => {
-        alert(`Le produit avec l'id ${json.id} a été créé`);
-      })
-      .catch((err) => {
-        alert("Une erreur est survenue lors de la création du produit.");
-        console.error("Erreur création produit :", err);
+  const handleAddProduct = async () => {
+    try {
+      const response = await fetch("https://fakestoreapi.com/products", {
+        method: "POST",
+        body: JSON.stringify({
+          title: "Nouveau produit",
+          price: 10.99,
+          description: "Description du nouveau produit",
+          image: "https://via.placeholder.com/150",
+          category: "autre",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
+      if (!response.ok) throw new Error("Erreur HTTP");
+      const json = await response.json();
+      alert(`Le produit avec l'id ${json.id} a été créé`);
+    } catch (err) {
+      alert("Une erreur est survenue lors de la création du produit.");
+      console.error("Erreur création produit :", err);
+    }
   };
 
-  const handleUpdateProduct = (id) => {
-    fetch(`https://fakestoreapi.com/products/${id}`, {
-      method: "PUT",
-      body: JSON.stringify({
-        title: "Produit modifié",
-        price: 29.99,
-        description: "Ceci est une nouvelle description",
-        image: "https://via.placeholder.com/150",
-        category: "modification",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erreur HTTP lors du PUT");
-        }
-        return res.json();
-      })
-      .then((json) => {
-        alert(`Le produit avec l'id ${json.id} a été modifié`);
-      })
-      .catch((err) => {
-        alert("Une erreur est survenue lors de la modification du produit.");
-        console.error("Erreur modification complète :", err);
+  const handleUpdateProduct = async (id) => {
+    try {
+      const response = await fetch(`https://fakestoreapi.com/products/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          title: "Produit modifié",
+          price: 29.99,
+          description: "Ceci est une nouvelle description",
+          image: "https://via.placeholder.com/150",
+          category: "modification",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
+      if (!response.ok) throw new Error("Erreur HTTP");
+      const json = await response.json();
+      alert(`Le produit avec l'id ${json.id} a été modifié`);
+    } catch (err) {
+      alert("Une erreur est survenue lors de la modification du produit.");
+      console.error("Erreur modification complète :", err);
+    }
   };
 
-  const handleUpdatePrice = (id) => {
-    fetch(`https://fakestoreapi.com/products/${id}`, {
-      method: "PATCH",
-      body: JSON.stringify({
-        price: 5,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erreur HTTP lors du PATCH");
-        }
-        return res.json();
-      })
-      .then((json) => {
-        alert(`Le prix du produit avec l'id ${json.id} a été modifié`);
-      })
-      .catch((err) => {
-        alert("Une erreur est survenue lors de la modification du prix.");
-        console.error("Erreur modification partielle (prix) :", err);
+  const handleUpdatePrice = async (id) => {
+    try {
+      const response = await fetch(`https://fakestoreapi.com/products/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          price: 5,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
+      if (!response.ok) throw new Error("Erreur HTTP");
+      const json = await response.json();
+      alert(`Le prix du produit avec l'id ${json.id} a été modifié`);
+    } catch (err) {
+      alert("Une erreur est survenue lors de la modification du prix.");
+      console.error("Erreur modification partielle (prix) :", err);
+    }
   };
 
-  const handleDeleteProduct = (id) => {
-    fetch(`https://fakestoreapi.com/products/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erreur HTTP lors du DELETE");
-        }
-        return res.json();
-      })
-      .then((json) => {
-        alert(`Le produit avec l'id ${json.id} a été supprimé`);
-      })
-      .catch((err) => {
-        alert("Une erreur est survenue lors de la suppression du produit.");
-        console.error("Erreur suppression produit :", err);
+  const handleDeleteProduct = async (id) => {
+    try {
+      const response = await fetch(`https://fakestoreapi.com/products/${id}`, {
+        method: "DELETE",
       });
+
+      if (!response.ok) throw new Error("Erreur HTTP");
+      const json = await response.json();
+      alert(`Le produit avec l'id ${json.id} a été supprimé`);
+    } catch (err) {
+      alert("Une erreur est survenue lors de la suppression du produit.");
+      console.error("Erreur suppression produit :", err);
+    }
   };
 
+  // === Rendu conditionnel simplifié ===
+  if (loading) {
+    return (
+      <Container className="my-5 px-4 text-center">
+        <Spinner animation="border" role="status" />
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container className="my-5 px-4">
+        <Alert variant="danger" className="text-center">
+          Une erreur est survenue lors du chargement des produits.
+        </Alert>
+      </Container>
+    );
+  }
+
+  // === Rendu principal ===
   return (
     <Container className="my-5 px-4">
       <h1 className="mb-4 text-center">Fake Store</h1>
@@ -145,59 +149,41 @@ function App() {
         </Button>
       </div>
 
-      {loading && (
-        <div className="text-center">
-          <Spinner animation="border" role="status" />
-        </div>
-      )}
+      <Row className="g-4 justify-content-center">
+        {products.map((product) => (
+          <Col md={6} lg={4} xl={3} key={product.id}>
+            <Card className="h-100">
+              <Card.Img variant="top" src={product.image} alt={product.title} />
+              <Card.Body>
+                <Card.Title>{product.title}</Card.Title>
+                <Card.Text>{product.description}</Card.Text>
+                <Card.Text>{product.price} €</Card.Text>
 
-      {error && (
-        <Alert variant="danger" className="text-center">
-          Une erreur est survenue lors du chargement des produits.
-        </Alert>
-      )}
-
-      {!loading && !error && (
-        <Row className="g-4 justify-content-center">
-          {products.map((product) => (
-            <Col md={6} lg={4} xl={3} key={product.id}>
-              <Card className="h-100">
-                <Card.Img
-                  variant="top"
-                  src={product.image}
-                  alt={product.title}
-                />
-                <Card.Body>
-                  <Card.Title>{product.title}</Card.Title>
-                  <Card.Text>{product.description}</Card.Text>
-                  <Card.Text>{product.price} €</Card.Text>
-
-                  <div className="d-grid gap-2">
-                    <Button
-                      variant="warning"
-                      onClick={() => handleUpdateProduct(product.id)}
-                    >
-                      Modifier le produit complet
-                    </Button>
-                    <Button
-                      variant="info"
-                      onClick={() => handleUpdatePrice(product.id)}
-                    >
-                      Modifier le prix du produit
-                    </Button>
-                    <Button
-                      variant="danger"
-                      onClick={() => handleDeleteProduct(product.id)}
-                    >
-                      Supprimer le produit
-                    </Button>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      )}
+                <div className="d-grid gap-2">
+                  <Button
+                    variant="warning"
+                    onClick={() => handleUpdateProduct(product.id)}
+                  >
+                    Modifier le produit complet
+                  </Button>
+                  <Button
+                    variant="info"
+                    onClick={() => handleUpdatePrice(product.id)}
+                  >
+                    Modifier le prix du produit
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDeleteProduct(product.id)}
+                  >
+                    Supprimer le produit
+                  </Button>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
     </Container>
   );
 }
