@@ -14,36 +14,30 @@ function App() {
       );
   }, []);
 
-  const handleAddProduct = () => {
-    const newProduct = {
-      title: "Produit de test",
-      price: 19.99,
-      description: "Ceci est un produit factice",
-      image: "https://via.placeholder.com/150",
-      category: "test",
-    };
-
-    fetch("https://fakestoreapi.com/products", {
-      method: "POST",
-      body: JSON.stringify(newProduct),
+  // Fonction pour modifier un produit
+  const handleUpdateProduct = (id) => {
+    fetch(`https://fakestoreapi.com/products/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        title: "Produit modifié",
+        price: 29.99,
+        description: "Ceci est une nouvelle description",
+        image: "https://via.placeholder.com/150",
+        category: "modification",
+      }),
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((res) => res.json())
-      .then((data) => {
-        alert(`Le produit avec l'id ${data.id} a été créé`);
+      .then((json) => {
+        alert(`Le produit avec l'id ${json.id} a été modifié`);
       });
   };
 
   return (
     <Container className="my-5 px-4">
       <h1 className="mb-4 text-center">Fake Store</h1>
-      <div className="text-center mb-4">
-        <Button onClick={handleAddProduct} variant="success">
-          Ajouter un produit
-        </Button>
-      </div>
       <Row className="g-4 justify-content-center">
         {products.map((product) => (
           <Col md={6} lg={4} xl={3} key={product.id}>
@@ -53,6 +47,12 @@ function App() {
                 <Card.Title>{product.title}</Card.Title>
                 <Card.Text>{product.description}</Card.Text>
                 <Card.Text>{product.price} €</Card.Text>
+                <Button
+                  variant="warning"
+                  onClick={() => handleUpdateProduct(product.id)}
+                >
+                  Modifier le produit complet
+                </Button>
               </Card.Body>
             </Card>
           </Col>
