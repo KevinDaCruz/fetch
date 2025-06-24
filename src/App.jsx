@@ -1,20 +1,34 @@
 import { useEffect, useState } from "react";
-import { Card, Container, Row, Col, Button } from "react-bootstrap";
+import {
+  Card,
+  Container,
+  Row,
+  Col,
+  Button,
+  Spinner,
+  Alert,
+} from "react-bootstrap";
 import "./App.css";
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((err) =>
-        console.error("Erreur lors du chargement des produits :", err)
-      );
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Erreur lors du chargement des produits :", err);
+        setError(true);
+        setLoading(false);
+      });
   }, []);
 
-  // Ajouter un produit (activité 4)
   const handleAddProduct = () => {
     fetch("https://fakestoreapi.com/products", {
       method: "POST",
@@ -32,10 +46,13 @@ function App() {
       .then((res) => res.json())
       .then((json) => {
         alert(`Le produit avec l'id ${json.id} a été créé`);
+      })
+      .catch((err) => {
+        alert("Une erreur est survenue lors de la création du produit.");
+        console.error("Erreur création produit :", err);
       });
   };
 
-  // Modifier toutes les infos d'un produit (activité 5)
   const handleUpdateProduct = (id) => {
     fetch(`https://fakestoreapi.com/products/${id}`, {
       method: "PUT",
@@ -53,10 +70,13 @@ function App() {
       .then((res) => res.json())
       .then((json) => {
         alert(`Le produit avec l'id ${json.id} a été modifié`);
+      })
+      .catch((err) => {
+        alert("Une erreur est survenue lors de la modification du produit.");
+        console.error("Erreur modification complète :", err);
       });
   };
 
-  // Modifier uniquement le prix (activité 6)
   const handleUpdatePrice = (id) => {
     fetch(`https://fakestoreapi.com/products/${id}`, {
       method: "PATCH",
@@ -70,10 +90,13 @@ function App() {
       .then((res) => res.json())
       .then((json) => {
         alert(`Le prix du produit avec l'id ${json.id} a été modifié`);
+      })
+      .catch((err) => {
+        alert("Une erreur est survenue lors de la modification du prix.");
+        console.error("Erreur modification partielle (prix) :", err);
       });
   };
 
-  // Supprimer un produit (activité 7)
   const handleDeleteProduct = (id) => {
     fetch(`https://fakestoreapi.com/products/${id}`, {
       method: "DELETE",
@@ -81,6 +104,10 @@ function App() {
       .then((res) => res.json())
       .then((json) => {
         alert(`Le produit avec l'id ${json.id} a été supprimé`);
+      })
+      .catch((err) => {
+        alert("Une erreur est survenue lors de la suppression du produit.");
+        console.error("Erreur suppression produit :", err);
       });
   };
 
@@ -94,41 +121,59 @@ function App() {
         </Button>
       </div>
 
-      <Row className="g-4 justify-content-center">
-        {products.map((product) => (
-          <Col md={6} lg={4} xl={3} key={product.id}>
-            <Card className="h-100">
-              <Card.Img variant="top" src={product.image} alt={product.title} />
-              <Card.Body>
-                <Card.Title>{product.title}</Card.Title>
-                <Card.Text>{product.description}</Card.Text>
-                <Card.Text>{product.price} €</Card.Text>
+      {loading && (
+        <div className="text-center">
+          <Spinner animation="border" role="status" />
+        </div>
+      )}
 
-                <div className="d-grid gap-2">
-                  <Button
-                    variant="warning"
-                    onClick={() => handleUpdateProduct(product.id)}
-                  >
-                    Modifier le produit complet
-                  </Button>
-                  <Button
-                    variant="info"
-                    onClick={() => handleUpdatePrice(product.id)}
-                  >
-                    Modifier le prix du produit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    onClick={() => handleDeleteProduct(product.id)}
-                  >
-                    Supprimer le produit
-                  </Button>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+      {error && (
+        <Alert variant="danger" className="text-center">
+          Une erreur est survenue lors du chargement des produits.
+        </Alert>
+      )}
+
+      {!loading && !error && (
+        <Row className="g-4 justify-content-center">
+          {products.map((product) => (
+            <Col md={6} lg={4} xl={3} key={product.id}>
+              <Card className="h-100">
+                <Card.Img
+                  variant="top"
+                  src={product.image}
+                  alt={product.title}
+                />
+                <Card.Body>
+                  <Card.Title>{product.title}</Card.Title>
+                  <Card.Text>{product.description}</Card.Text>
+                  <Card.Text>{product.price} €</Card.Text>
+
+                  <div className="d-grid gap-2">
+                    <Button
+                      variant="warning"
+                      onClick={() => handleUpdateProduct(product.id)}
+                    >
+                      Modifier le produit complet
+                    </Button>
+                    <Button
+                      variant="info"
+                      onClick={() => handleUpdatePrice(product.id)}
+                    >
+                      Modifier le prix du produit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      onClick={() => handleDeleteProduct(product.id)}
+                    >
+                      Supprimer le produit
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
     </Container>
   );
 }
