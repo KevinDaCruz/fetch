@@ -14,7 +14,7 @@ function App() {
       );
   }, []);
 
-  // Fonction pour modifier un produit
+  // Modifier toutes les infos d'un produit
   const handleUpdateProduct = (id) => {
     fetch(`https://fakestoreapi.com/products/${id}`, {
       method: "PUT",
@@ -35,6 +35,23 @@ function App() {
       });
   };
 
+  // Modifier seulement le prix du produit
+  const handleUpdatePrice = (id) => {
+    fetch(`https://fakestoreapi.com/products/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        price: 5,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        alert(`Le prix du produit avec l'id ${json.id} a été modifié`);
+      });
+  };
+
   return (
     <Container className="my-5 px-4">
       <h1 className="mb-4 text-center">Fake Store</h1>
@@ -49,9 +66,16 @@ function App() {
                 <Card.Text>{product.price} €</Card.Text>
                 <Button
                   variant="warning"
+                  className="mb-2"
                   onClick={() => handleUpdateProduct(product.id)}
                 >
                   Modifier le produit complet
+                </Button>
+                <Button
+                  variant="info"
+                  onClick={() => handleUpdatePrice(product.id)}
+                >
+                  Modifier le prix du produit
                 </Button>
               </Card.Body>
             </Card>
