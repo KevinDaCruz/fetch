@@ -15,22 +15,17 @@ function App() {
   }, []);
 
   return (
-    <Container className="my-5 px-4" style={{ maxWidth: "1200px" }}>
+    <Container className="my-5 px-4">
       <h1 className="mb-4 text-center">Fake Store</h1>
       <Row className="g-4 justify-content-center">
         {products.map((product) => (
           <Col md={6} lg={4} xl={3} key={product.id}>
             <Card className="h-100">
-              <Card.Img
-                variant="top"
-                src={product.image}
-                alt={product.title}
-                className="product-img"
-              />
+              <Card.Img variant="top" src={product.image} alt={product.title} />
               <Card.Body>
                 <Card.Title>{product.title}</Card.Title>
                 <Card.Text>{product.description}</Card.Text>
-                <p className="product-price">{product.price} €</p>
+                <Card.Text>{product.price} €</Card.Text>
               </Card.Body>
             </Card>
           </Col>
