@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, Container, Row, Col } from "react-bootstrap";
+import { Card, Container, Row, Col, Button } from "react-bootstrap";
 import "./App.css";
 
 function App() {
@@ -14,9 +14,36 @@ function App() {
       );
   }, []);
 
+  const handleAddProduct = () => {
+    const newProduct = {
+      title: "Produit de test",
+      price: 19.99,
+      description: "Ceci est un produit factice",
+      image: "https://via.placeholder.com/150",
+      category: "test",
+    };
+
+    fetch("https://fakestoreapi.com/products", {
+      method: "POST",
+      body: JSON.stringify(newProduct),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        alert(`Le produit avec l'id ${data.id} a été créé`);
+      });
+  };
+
   return (
     <Container className="my-5 px-4">
       <h1 className="mb-4 text-center">Fake Store</h1>
+      <div className="text-center mb-4">
+        <Button onClick={handleAddProduct} variant="success">
+          Ajouter un produit
+        </Button>
+      </div>
       <Row className="g-4 justify-content-center">
         {products.map((product) => (
           <Col md={6} lg={4} xl={3} key={product.id}>
