@@ -14,7 +14,28 @@ function App() {
       );
   }, []);
 
-  // Modifier toutes les infos d'un produit
+  // Ajouter un produit (activité 4)
+  const handleAddProduct = () => {
+    fetch("https://fakestoreapi.com/products", {
+      method: "POST",
+      body: JSON.stringify({
+        title: "Nouveau produit",
+        price: 10.99,
+        description: "Description du nouveau produit",
+        image: "https://via.placeholder.com/150",
+        category: "autre",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        alert(`Le produit avec l'id ${json.id} a été créé`);
+      });
+  };
+
+  // Modifier toutes les infos d'un produit (activité 5)
   const handleUpdateProduct = (id) => {
     fetch(`https://fakestoreapi.com/products/${id}`, {
       method: "PUT",
@@ -35,7 +56,7 @@ function App() {
       });
   };
 
-  // Modifier seulement le prix du produit
+  // Modifier uniquement le prix (activité 6)
   const handleUpdatePrice = (id) => {
     fetch(`https://fakestoreapi.com/products/${id}`, {
       method: "PATCH",
@@ -52,9 +73,27 @@ function App() {
       });
   };
 
+  // Supprimer un produit (activité 7)
+  const handleDeleteProduct = (id) => {
+    fetch(`https://fakestoreapi.com/products/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        alert(`Le produit avec l'id ${json.id} a été supprimé`);
+      });
+  };
+
   return (
     <Container className="my-5 px-4">
       <h1 className="mb-4 text-center">Fake Store</h1>
+
+      <div className="text-center mb-4">
+        <Button variant="success" onClick={handleAddProduct}>
+          Ajouter un produit
+        </Button>
+      </div>
+
       <Row className="g-4 justify-content-center">
         {products.map((product) => (
           <Col md={6} lg={4} xl={3} key={product.id}>
@@ -64,19 +103,27 @@ function App() {
                 <Card.Title>{product.title}</Card.Title>
                 <Card.Text>{product.description}</Card.Text>
                 <Card.Text>{product.price} €</Card.Text>
-                <Button
-                  variant="warning"
-                  className="mb-2"
-                  onClick={() => handleUpdateProduct(product.id)}
-                >
-                  Modifier le produit complet
-                </Button>
-                <Button
-                  variant="info"
-                  onClick={() => handleUpdatePrice(product.id)}
-                >
-                  Modifier le prix du produit
-                </Button>
+
+                <div className="d-grid gap-2">
+                  <Button
+                    variant="warning"
+                    onClick={() => handleUpdateProduct(product.id)}
+                  >
+                    Modifier le produit complet
+                  </Button>
+                  <Button
+                    variant="info"
+                    onClick={() => handleUpdatePrice(product.id)}
+                  >
+                    Modifier le prix du produit
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDeleteProduct(product.id)}
+                  >
+                    Supprimer le produit
+                  </Button>
+                </div>
               </Card.Body>
             </Card>
           </Col>
