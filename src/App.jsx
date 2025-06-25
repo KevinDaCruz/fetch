@@ -19,11 +19,17 @@ function App() {
     const fetchProducts = async () => {
       try {
         const response = await fetch("https://fakestoreapi.com/products");
-        if (!response.ok) throw new Error("Erreur HTTP");
+        if (!response.ok) {
+          throw new Error(
+            `Erreur HTTP: ${
+              response.statusText ? response.statusText + " - " : ""
+            }${response.status}`
+          );
+        }
         const data = await response.json();
         setProducts(data);
       } catch (err) {
-        console.error("Erreur lors du chargement des produits :", err);
+        console.error("Erreur lors du chargement des produits :", err.message);
         setError(true);
       } finally {
         setLoading(false);
@@ -49,12 +55,18 @@ function App() {
         },
       });
 
-      if (!response.ok) throw new Error("Erreur HTTP");
+      if (!response.ok) {
+        throw new Error(
+          `Erreur HTTP: ${
+            response.statusText ? response.statusText + " - " : ""
+          }${response.status}`
+        );
+      }
       const json = await response.json();
       alert(`Le produit avec l'id ${json.id} a été créé`);
     } catch (err) {
       alert("Une erreur est survenue lors de la création du produit.");
-      console.error("Erreur création produit :", err);
+      console.error("Erreur création produit :", err.message);
     }
   };
 
@@ -74,12 +86,18 @@ function App() {
         },
       });
 
-      if (!response.ok) throw new Error("Erreur HTTP");
+      if (!response.ok) {
+        throw new Error(
+          `Erreur HTTP: ${
+            response.statusText ? response.statusText + " - " : ""
+          }${response.status}`
+        );
+      }
       const json = await response.json();
       alert(`Le produit avec l'id ${json.id} a été modifié`);
     } catch (err) {
       alert("Une erreur est survenue lors de la modification du produit.");
-      console.error("Erreur modification complète :", err);
+      console.error("Erreur modification complète :", err.message);
     }
   };
 
@@ -95,12 +113,18 @@ function App() {
         },
       });
 
-      if (!response.ok) throw new Error("Erreur HTTP");
+      if (!response.ok) {
+        throw new Error(
+          `Erreur HTTP: ${
+            response.statusText ? response.statusText + " - " : ""
+          }${response.status}`
+        );
+      }
       const json = await response.json();
       alert(`Le prix du produit avec l'id ${json.id} a été modifié`);
     } catch (err) {
       alert("Une erreur est survenue lors de la modification du prix.");
-      console.error("Erreur modification partielle (prix) :", err);
+      console.error("Erreur modification partielle (prix) :", err.message);
     }
   };
 
@@ -110,16 +134,22 @@ function App() {
         method: "DELETE",
       });
 
-      if (!response.ok) throw new Error("Erreur HTTP");
+      if (!response.ok) {
+        throw new Error(
+          `Erreur HTTP: ${
+            response.statusText ? response.statusText + " - " : ""
+          }${response.status}`
+        );
+      }
       const json = await response.json();
       alert(`Le produit avec l'id ${json.id} a été supprimé`);
     } catch (err) {
       alert("Une erreur est survenue lors de la suppression du produit.");
-      console.error("Erreur suppression produit :", err);
+      console.error("Erreur suppression produit :", err.message);
     }
   };
 
-  // === Rendu conditionnel simplifié ===
+  // === Rendu conditionnel ===
   if (loading) {
     return (
       <Container className="my-5 px-4 text-center">
